@@ -40,7 +40,8 @@ export const ContextProvider = ({ children }) => {
 
       setWeather(weatherData.currentConditions);
       setValues(weatherData.values);
-      setThisLocation(location); // This will show exactly what the user typed
+      setThisLocation(weatherData.resolvedAddress);setThisLocation(weatherData.resolvedAddress.split(',')[0]);
+
 
 
     } catch (err) {

@@ -9,18 +9,21 @@ const HourlyForecast = ({ forecastData }) => {
         Hourly Forecast
       </h2>
 
-      <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-        {forecastData.map((hour, idx) => {
-          const fullDatetime = `${hour.date}T${hour.time}`;
-          return (
-            <MiniCard
-              key={idx}
-              datetime={fullDatetime}
-              temp={hour.temp}
-              iconString={hour.condition}
-            />
-          );
-        })}
+      {/* ✅ Wrap in a scroll container */}
+      <div className="relative w-full overflow-x-auto">
+        <div className="flex gap-4 min-w-max pb-4">
+          {forecastData.map((hour, idx) => {
+            const fullDatetime = `${hour.date}T${hour.time}`;
+            return (
+              <MiniCard
+                key={idx}
+                datetime={fullDatetime}
+                temp={hour.temp}
+                iconString={hour.condition}
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );

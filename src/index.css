@@ -24,10 +24,6 @@
   }
 }
 
-html, body {
-  height: 100%;
-  overflow: hidden;
-}
 
 .glassCard {
   background: rgba(225, 225, 225, 0.18);
@@ -41,3 +37,4 @@ html, body {
 html {
   scroll-behavior: smooth;
 }
+
