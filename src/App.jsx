@@ -31,7 +31,7 @@ function App() {
           <h1 className='text-4xl md:text-6xl font-bold bg-gradient-to-r from-sky-400 to-indigo-500 text-transparent bg-clip-text drop-shadow-2xl'>
             Weather App
           </h1>
-          <p className='text-lg md:text-xl text-blue-200 drop-shadow-sm mt-2'>
+          <p className='text-lg md:text-xl text-blue-200 drop-shadow-sm mt-2 mb-6'>
             Get real-time weather updates in your city
           </p>
         </div>
@@ -64,7 +64,7 @@ function App() {
       <BackgroundLayout />
 
       {/* MAIN WEATHER CARDS */}
-      <main className='w-full min-h-screen flex flex-wrap gap-8 py-4 px-[10%] items-center justify-center'>
+      <main className='w-full min-h-screen flex flex-col items-center gap-8 py-4 px-4 md:px-12 lg:px-24'>
         <WeatherCard
           place={thisLocation}
           windspeed={weather.wspd}
@@ -75,7 +75,7 @@ function App() {
           conditions={weather.conditions}
         />
 
-        <div className='flex justify-center gap-8 flex-wrap w-[60%]'>
+        <div className='w-full max-w-4xl flex flex-wrap justify-center gap-8'>
           {values?.slice(1, 7).map(curr => (
             <MiniCard
               key={curr.datetime}
