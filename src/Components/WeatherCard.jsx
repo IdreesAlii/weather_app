@@ -44,7 +44,7 @@ const WeatherCard = ({
   }, [iconString])
 
    return (
-   <div className='w-[22rem] min-w-[22rem] h-[30rem] glassCard p-4 flex flex-col justify-between'>
+    <div className='w-[22rem] min-w-[22rem] min-h-[26rem] md:h-[30rem] glassCard p-4 flex flex-col justify-between'>
 
     {/* Temperature & Icon */}
     <div className='flex flex-col items-center gap-2 mt-4'>

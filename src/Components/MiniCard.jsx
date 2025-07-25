@@ -9,6 +9,8 @@ import storm from '../assets/icons/storm.png'
 import wind from '../assets/icons/windy.png'
 
 const MiniCard = ({ time, temp, iconString }) => {
+  console.log("🧪 Raw Time String →", time, "| Parsed Date:", new Date(`2000-01-01T${time}`))
+
   const [icon, setIcon] = useState(sun)
 
   useEffect(() => {
@@ -27,8 +29,16 @@ const MiniCard = ({ time, temp, iconString }) => {
   return (
     <div className='glassCard w-[10rem] h-[10rem] p-4 flex flex-col'>
       <p className='text-center font-medium text-white'>
-        {new Date(time).toLocaleTimeString('en', { weekday: 'long' }).split(" ")[0]}
+        {time
+          ? new Date(`2000-01-01T${time}`).toLocaleTimeString('en', {
+              hour: 'numeric',
+              minute: 'numeric',
+              hour12: true,
+            })
+          : 'Invalid time'}
       </p>
+
+
       <hr className='my-1 border-gray-400' />
       <div className='w-full flex justify-center items-center flex-1'>
         <img src={icon} alt="forecast" className='w-[3.5rem] h-[3.5rem]' />

@@ -64,7 +64,7 @@ function App() {
       <BackgroundLayout />
 
       {/* MAIN WEATHER CARDS */}
-      <main className='w-full min-h-screen flex flex-col items-center gap-8 py-4 px-4 md:px-12 lg:px-24'>
+      <main className='w-full max-h-[calc(100vh-6rem)] overflow-y-auto flex flex-col items-center gap-8 py-4 px-4 md:px-12 lg:px-24'>
         <WeatherCard
           place={thisLocation}
           windspeed={weather.wspd}
@@ -76,15 +76,16 @@ function App() {
         />
 
         <div className='w-full max-w-4xl flex flex-wrap justify-center gap-8'>
-          {values?.slice(1, 7).map(curr => (
-            <MiniCard
-              key={curr.datetime}
-              time={curr.datetime}
-              temp={curr.temp}
-              iconString={curr.conditions}
-            />
-          ))}
-        </div>
+          {values?.slice(1, 7).map((hour, idx) => (
+          <MiniCard
+            key={idx}
+            time={hour.datetime}
+            temp={hour.temp}
+            iconString={hour.conditions}
+              />
+            ))}
+          </div>
+
 
         {/* ✅ Added new section for Hourly Forecast */}
         {values && values.length > 0 && (

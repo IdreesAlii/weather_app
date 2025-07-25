@@ -37,3 +37,7 @@ html, body {
   border-radius: 9px;
   border: 1px solid rgba(225, 225, 225, 0.18);
 }
+
+html {
+  scroll-behavior: smooth;
+}
