@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+*,::before,
+  ::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+@layer utilities {
+  .glow-pulse {
+    box-shadow: 0 0 15px 4px rgba(59, 130, 246, 0.6);
+    animation: pulse-glow 1.5s infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 15px 4px rgba(59, 130, 246, 0.6);
+    }
+    50% {
+      box-shadow: 0 0 25px 8px rgba(59, 130, 246, 0.8);
+    }
+  }
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+.glassCard {
+  background: rgba(225, 225, 225, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 9px;
+  border: 1px solid rgba(225, 225, 225, 0.18);
+}
