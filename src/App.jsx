@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import search from './assets/icons/search.svg';
 import { useStateContext } from './Context';
 import { BackgroundLayout, WeatherCard, MiniCard } from './Components';
 import HourlyForecast from './Components/HourlyForecast';
