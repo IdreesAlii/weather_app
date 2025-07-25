@@ -41,11 +41,11 @@ function App() {
               glow ? 'glow-pulse' : ''
             } bg-blue-950/50 border border-blue-600 shadow-lg`}
           >
-            <img
+            {/* <img
               src={search}
               alt="search"
               className="invert brightness-0 w-[1.5rem] h-[1.5rem] mr-3 opacity-80 hover:opacity-100 transition duration-300"
-            />
+            /> */}
             <input
               type="text"
               placeholder="Search city..."
@@ -56,6 +56,9 @@ function App() {
               }}
               className="h-14 w-full text-[1.2rem] bg-transparent text-white placeholder-blue-300 focus:outline-none pl-4"
             />
+            <button onClick={submitCity}
+            className='active:scale-95 bg-sky-500 ml-2 hover:bg-sky-600 hover:shadow-lg hover:scale-105 shadow-md rounded-full aspect-square h-10 w-10 flex items-center justify-center transition ring-1 ring-white/20'
+            >🔎</button>
           </div>
         </div>
       </nav>
@@ -74,6 +77,7 @@ function App() {
           iconString={weather.conditions}
           conditions={weather.conditions}
         />
+
 
         <div className="w-full max-w-4xl flex flex-wrap justify-center gap-8">
           {values?.slice(1, 7).map((hour, idx) => (
