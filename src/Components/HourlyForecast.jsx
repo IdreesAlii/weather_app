@@ -10,14 +10,17 @@ const HourlyForecast = ({ forecastData }) => {
       </h2>
 
       <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-        {forecastData.map((hour, idx) => (
-          <MiniCard
-            key={idx}
-            time={hour.time}
-            temp={hour.temp}
-            iconString={hour.condition}
-          />
-        ))}
+        {forecastData.map((hour, idx) => {
+          const fullDatetime = `${hour.date}T${hour.time}`;
+          return (
+            <MiniCard
+              key={idx}
+              datetime={fullDatetime}
+              temp={hour.temp}
+              iconString={hour.condition}
+            />
+          );
+        })}
       </div>
     </div>
   );

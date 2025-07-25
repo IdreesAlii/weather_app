@@ -10,16 +10,18 @@ export const StateContextProvider = ({ children }) => {
     const [thisLocation, setLocation] = useState('')
 
     // fetch api
-    const fetchWeather = async () => {
-        const options = {
-            method: 'GET',
-            url: 'https://visual-crossing-weather.p.rapidapi.com/forecast',
-            params: {
-                aggregateHours: '24',
-                location: place,
-                contentType: 'json',
-                unitGroup: 'metric',
-                shortColumnNames: 0,
+    const fetchWeather = async (location) => {
+    const encodedLocation = encodeURIComponent(location);
+
+    const options = {
+        method: 'GET',
+        url: 'https://visual-crossing-weather.p.rapidapi.com/forecast',
+        params: {
+            aggregateHours: '24',
+            location: encodedLocation,
+            contentType: 'json',
+            unitGroup: 'metric',
+            shortColumnNames: 0,
             },
             headers: {
                 'X-RapidAPI-Key': import.meta.env.VITE_API_KEY,
@@ -29,17 +31,16 @@ export const StateContextProvider = ({ children }) => {
 
         try {
             const response = await axios.request(options);
-            console.log(response.data)
-            const thisData = Object.values(response.data.locations)[0]
-            setLocation(thisData.address)
-            setValues(thisData.values)
-            setWeather(thisData.values[0])
+            const thisData = Object.values(response.data.locations)[0];
+            setLocation(thisData.address);
+            setValues(thisData.values);
+            setWeather(thisData.values[0]);
         } catch (e) {
             console.error(e);
-            // if the api throws error.
-            alert('This place does not exist')
+            alert('This place does not exist');
         }
     }
+
 
     useEffect(() => {
         fetchWeather()
@@ -50,16 +51,16 @@ export const StateContextProvider = ({ children }) => {
     }, [values])
 
     return (
-        <StateContext.Provider value={{
-            weather,
-            setPlace,
-            values,
-            thisLocation,
-            place
-        }}>
-            {children}
-        </StateContext.Provider>
+      <StateContext.Provider value={{
+          weather,
+          values,
+          thisLocation,
+          fetchWeather, // ✅ NEW
+      }}>
+          {children}
+      </StateContext.Provider>
     )
+
 }
 
 export const useStateContext = () => useContext(StateContext)

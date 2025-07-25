@@ -13,7 +13,9 @@ function App() {
   }, [])
 
   const [input, setInput] = useState('')
-  const { weather, thisLocation, values, place, setPlace } = useStateContext()
+
+const { fetchWeather, weather, thisLocation, values, place, setPlace } = useStateContext()
+
 
   const submitCity = () => {
     setPlace(input)
@@ -45,15 +47,16 @@ function App() {
       className='invert brightness-0 w-[1.5rem] h-[1.5rem] mr-3 opacity-80 hover:opacity-100 transition duration-300'
     />
     <input
-      onKeyUp={(e) => {
-        if (e.key === 'Enter') submitCity();
-      }}
       type="text"
-      placeholder='Search city'
-      className='h-14 w-full text-[1.2rem] bg-transparent text-white placeholder-blue-300 focus:outline-none pl-4'
+      placeholder="Search city..."
       value={input}
-      onChange={e => setInput(e.target.value)}
-    />
+      onChange={(e) => setInput(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' && input.trim()) {
+          fetchWeather(input)
+        }
+      }}
+      className='h-14 w-full text-[1.2rem] bg-transparent text-white placeholder-blue-300 focus:outline-none pl-4'   />
   </div>
 </div>
 
