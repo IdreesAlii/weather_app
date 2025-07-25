@@ -9,6 +9,8 @@ function App() {
   const [glow, setGlow] = useState(true);
   const [input, setInput] = useState('');
   const { fetchWeather, weather, thisLocation, values } = useStateContext();
+  const [suggestions, setSuggestions] = useState([]);
+
 
   useEffect(() => {
     const timer = setTimeout(() => setGlow(false), 4000);
@@ -20,6 +22,24 @@ function App() {
     fetchWeather(input.trim());
     setInput('');
   };
+
+const suggestionTypeShit = (query) => {
+    if (!query.trim()) {
+      setSuggestions([]);
+      return;
+    }
+    const dummyCities = [
+      "Lahore, Pakistan",
+      "Islamabad, Pakistan",
+      "Karachi, Pakistan",
+      "Gilgit, Pakistan",
+      "Quetta, Pakistan",
+    ]
+    const matched = dummyCities.filter(city => city.toLowerCase().includes(query.toLowerCase())
+    );
+    setSuggestions(matched);
+
+  }
 
   return (
     <div className="min-h-screen w-full overflow-y-auto bg-gradient-to-b from-[#0f172a] to-[#1e293b] px-4 md:px-8 py-6">
@@ -37,7 +57,7 @@ function App() {
         {/* Search Bar */}
         <div className="w-full max-w-xs mt-4">
           <div
-            className={`flex items-center rounded-md px-4 ${
+            className={`flex items-center rounded-md px-4 relative ${
               glow ? 'glow-pulse' : ''
             } bg-blue-950/50 border border-blue-600 shadow-lg`}
           >
@@ -50,12 +70,33 @@ function App() {
               type="text"
               placeholder="Search city..."
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) =>{
+                const typedText = e.target.value;
+                suggestionTypeShit(typedText);
+                setInput(e.target.value)}}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') submitCity();
               }}
               className="h-14 w-full text-[1.2rem] bg-transparent text-white placeholder-blue-300 focus:outline-none pl-4"
             />
+            {suggestions.length > 0 && (
+              <div className='absolute top-full mt-2 w-full bg-white z-10 rounded-md shadow-lg max-h-48 overflow-y-auto'>
+                {suggestions.map((city, index) => (
+                  <p className='
+                  px-4 py-2 hover:bg-blue-100 cursor-pointer text-gray-800'
+                  key={index}
+                  onClick={() => {
+                    setInput(city);
+                    setSuggestions([]);
+                  }}
+                  >
+                    {city}
+                  </p>
+                ))}
+              </div>
+            )}
+
+
             <button onClick={submitCity}
             className='active:scale-95 bg-sky-500 ml-2 hover:bg-sky-600 hover:shadow-lg hover:scale-105 shadow-md rounded-full aspect-square h-10 w-10 flex items-center justify-center transition ring-1 ring-white/20'
             >🔎</button>
