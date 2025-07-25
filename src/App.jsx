@@ -8,7 +8,7 @@ import HourlyForecast from './Components/HourlyForecast';
 function App() {
   const [glow, setGlow] = useState(true);
   const [input, setInput] = useState('');
-  const { fetchWeather, weather, thisLocation, values, place, setPlace } = useStateContext();
+  const { fetchWeather, weather, thisLocation, values } = useStateContext();
 
   useEffect(() => {
     const timer = setTimeout(() => setGlow(false), 4000);
@@ -16,13 +16,13 @@ function App() {
   }, []);
 
   const submitCity = () => {
-    setPlace(input);
+    if (!input.trim()) return;
+    fetchWeather(input.trim());
     setInput('');
   };
 
   return (
     <div className="min-h-screen w-full overflow-y-auto bg-gradient-to-b from-[#0f172a] to-[#1e293b] px-4 md:px-8 py-6">
-
       {/* NAVIGATION */}
       <nav className="flex flex-col items-center justify-center text-center min-h-[20vh] gap-6 px-4 mb-10">
         <div className="flex flex-col gap-2">
@@ -52,9 +52,7 @@ function App() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' && input.trim()) {
-                  submitCity();
-                }
+                if (e.key === 'Enter') submitCity();
               }}
               className="h-14 w-full text-[1.2rem] bg-transparent text-white placeholder-blue-300 focus:outline-none pl-4"
             />

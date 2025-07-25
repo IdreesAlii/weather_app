@@ -1,69 +1,73 @@
-import { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 
-const StateContext = createContext();
+const Context = createContext();
 
-export const ContextProvider = ({ children }) => {
-  const [weather, setWeather] = useState(null);
+export const StateContext = ({ children }) => {
+  const [weather, setWeather] = useState({});
+  const [thisLocation, setThisLocation] = useState('Fine, NY, USA');
+  const [place, setPlace] = useState('fine');
   const [values, setValues] = useState([]);
-  const [thisLocation, setThisLocation] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  const fetchWeather = async (location) => {
-    if (!location) return;
-
-    setIsLoading(true);
-    setError(null);
-
+  const fetchWeather = async (city) => {
     try {
-      const encodedLocation = encodeURIComponent(location);
+      const options = {
+        method: 'GET',
+        url: 'https://visual-crossing-weather.p.rapidapi.com/forecast',
+        params: {
+          location: city,
+          aggregateHours: '1',
+          contentType: 'json',
+          unitGroup: 'metric',
+          shortColumnNames: '0',
+        },
+        headers: {
+          'X-RapidAPI-Key': import.meta.env.VITE_API_KEY,
+          'X-RapidAPI-Host': 'visual-crossing-weather.p.rapidapi.com',
+        },
+      };
 
-      const response = await fetch(
-        `https://visual-crossing-weather.p.rapidapi.com/forecast?location=${encodedLocation}&aggregateHours=24&unitGroup=metric&shortColumnNames=true&contentType=json`,
-        {
-          method: 'GET',
-          headers: {
-            'X-RapidAPI-Key': import.meta.env.VITE_API_KEY,
-            'X-RapidAPI-Host': 'visual-crossing-weather.p.rapidapi.com',
-          },
-        }
-      );
+      const response = await axios.request(options);
+      const locations = response.data.locations;
+      const locationKey = Object.keys(locations)[0];
+      const locationData = locations[locationKey];
 
-      const data = await response.json();
-
-      if (!data || Object.keys(data).length === 0) {
-        throw new Error("No weather data found for that location");
+      if (!locationData) {
+        console.error('No data returned for the given city.');
+        return;
       }
 
-      const locationKey = Object.keys(data.locations)[0];
-      const weatherData = data.locations[locationKey];
+      const valuesArray = locationData.values;
+      const current = valuesArray[0];
 
-      setWeather(weatherData.currentConditions);
-      setValues(weatherData.values);
-      setThisLocation(weatherData.resolvedAddress);setThisLocation(weatherData.resolvedAddress.split(',')[0]);
-
-
-
-    } catch (err) {
-      console.error(err);
-      setError("Could not fetch weather for that location.");
-    } finally {
-      setIsLoading(false);
+      setWeather(current);
+      setThisLocation(`${locationData.address}`);
+      setValues(valuesArray);
+    } catch (error) {
+      console.error('Weather fetch failed:', error);
     }
   };
 
+  useEffect(() => {
+    if (place) {
+      fetchWeather(place);
+    }
+  }, [place]);
+
   return (
-    <StateContext.Provider value={{
-      weather,
-      values,
-      thisLocation,
-      isLoading,
-      error,
-      fetchWeather
-    }}>
+    <Context.Provider
+      value={{
+        fetchWeather,
+        weather,
+        thisLocation,
+        values,
+        place,
+        setPlace,
+      }}
+    >
       {children}
-    </StateContext.Provider>
+    </Context.Provider>
   );
 };
 
-export const useStateContext = () => useContext(StateContext);
+export const useStateContext = () => useContext(Context);
