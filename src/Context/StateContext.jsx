@@ -10,43 +10,49 @@ export const StateContext = ({ children }) => {
   const [values, setValues] = useState([]);
 
   const fetchWeather = async (city) => {
-    try {
-      const options = {
-        method: 'GET',
-        url: 'https://visual-crossing-weather.p.rapidapi.com/forecast',
-        params: {
-          location: city,
-          aggregateHours: '1',
-          contentType: 'json',
-          unitGroup: 'metric',
-          shortColumnNames: '0',
-        },
-        headers: {
-          'X-RapidAPI-Key': import.meta.env.VITE_API_KEY,
-          'X-RapidAPI-Host': 'visual-crossing-weather.p.rapidapi.com',
-        },
-      };
+  try {
+    const options = {
+      method: 'GET',
+      url: 'https://visual-crossing-weather.p.rapidapi.com/forecast',
+      params: {
+        location: city,
+        aggregateHours: '1',
+        contentType: 'json',
+        unitGroup: 'metric',
+        shortColumnNames: '0',
+      },
+      headers: {
+        'X-RapidAPI-Key': import.meta.env.VITE_API_KEY,
+        'X-RapidAPI-Host': 'visual-crossing-weather.p.rapidapi.com',
+      },
+    };
 
-      const response = await axios.request(options);
-      const locations = response.data.locations;
-      const locationKey = Object.keys(locations)[0];
-      const locationData = locations[locationKey];
+    const response = await axios.request(options);
 
-      if (!locationData) {
-        console.error('No data returned for the given city.');
-        return;
-      }
+    // ✅ Now it's safe to log
+    console.log("FULL API response ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+    console.log(JSON.stringify(response.data, null, 2));
 
-      const valuesArray = locationData.values;
-      const current = valuesArray[0];
+    const locations = response.data.locations;
+    const locationKey = Object.keys(locations)[0];
+    const locationData = locations[locationKey];
 
-      setWeather(current);
-      setThisLocation(`${locationData.address}`);
-      setValues(valuesArray);
-    } catch (error) {
-      console.error('Weather fetch failed:', error);
+    if (!locationData) {
+      console.error('No data returned for the given city.');
+      return;
     }
-  };
+
+    const valuesArray = locationData.values;
+    const current = valuesArray[0];
+
+    setWeather(current);
+    setThisLocation(`${locationData.address}`);
+    setValues(valuesArray);
+  } catch (error) {
+    console.error('Weather fetch failed:', error);
+  }
+};
+
 
   useEffect(() => {
     if (place) {

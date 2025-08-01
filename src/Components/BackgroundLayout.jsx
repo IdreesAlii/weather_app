@@ -1,41 +1,50 @@
-import React, { useEffect, useState } from 'react'
-import { useStateContext } from '../Context'
-//images
-import Clear from '../assets/images/Clear.jpg'
-import Fog from '../assets/images/fog.png'
-import Cloudy from '../assets/images/Cloudy.jpg'
-import Rainy from '../assets/images/Rainy.jpg'
-import Snow from '../assets/images/snow.jpg'
-import Stormy from '../assets/images/Stormy.jpg'
-import Sunny from '../assets/images/Sunny.jpg'
+import React, { useEffect, useState } from 'react';
+import { useStateContext } from '../Context';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const weatherColors = {
+  clear: 'from-blue-400 to-indigo-600',
+  cloudy: 'from-gray-400 to-gray-700',
+  rain: 'from-blue-800 to-gray-900',
+  snow: 'from-white to-blue-200',
+  fog: 'from-gray-300 to-gray-500',
+  storm: 'from-indigo-800 to-black',
+  default: 'from-sky-500 to-blue-800',
+};
+
+const getGradient = (condition = '') => {
+  const c = condition.toLowerCase();
+  if (c.includes('clear') || c.includes('sun')) return weatherColors.clear;
+  if (c.includes('cloud')) return weatherColors.cloudy;
+  if (c.includes('rain') || c.includes('shower')) return weatherColors.rain;
+  if (c.includes('snow')) return weatherColors.snow;
+  if (c.includes('fog')) return weatherColors.fog;
+  if (c.includes('thunder') || c.includes('storm')) return weatherColors.storm;
+  return weatherColors.default;
+};
 
 const BackgroundLayout = () => {
-
-  const { weather } = useStateContext()
-  const [image, setImage] = useState(Clear)
+  const { weather } = useStateContext();
+  const [bgGradient, setBgGradient] = useState(weatherColors.default);
 
   useEffect(() => {
-    if (weather.conditions) {
-      let imageString = weather.conditions
-      if (imageString.toLowerCase().includes('clear')) {
-        setImage(Clear)
-      } else if (imageString.toLowerCase().includes('cloud')) {
-        setImage(Cloudy)
-      } else if (imageString.toLowerCase().includes('rain') || imageString.toLowerCase().includes('shower')) {
-        setImage(Rainy)
-      } else if (imageString.toLowerCase().includes('snow')) {
-        setImage(Snow)
-      } else if (imageString.toLowerCase().includes('fog')) {
-        setImage(Fog)
-      } else if (imageString.toLowerCase().includes('thunder') || imageString.toLowerCase().includes('storm')) {
-        setImage(Stormy)
-      }
+    if (weather?.conditions) {
+      setBgGradient(getGradient(weather.conditions));
     }
-  }, [weather])
+  }, [weather]);
 
   return (
-    <img src={image} alt="weather_image" className='h-screen w-full fixed left-0 top-0 -z-[10]' />
-  )
-}
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={bgGradient}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 1.5 }}
+        className={`fixed inset-0 -z-10 bg-gradient-to-b ${bgGradient} blur-sm`}
+      />
+    </AnimatePresence>
+  );
+};
 
-export default BackgroundLayout
+export default BackgroundLayout;

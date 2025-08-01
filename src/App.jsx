@@ -3,6 +3,8 @@ import './App.css';
 import { useStateContext } from './Context';
 import { BackgroundLayout, WeatherCard, MiniCard } from './Components';
 import HourlyForecast from './Components/HourlyForecast';
+import DailyForecast from './Components/DailyForecast';
+
 
 function App() {
   const [glow, setGlow] = useState(true);
@@ -123,6 +125,7 @@ function App() {
 
       {/* Background Effect */}
       {/* <BackgroundLayout /> */}
+      <BackgroundLayout />
 
       {/* MAIN SECTION */}
       <main className="w-full flex flex-col items-center gap-8 py-4 px-4 md:px-12 lg:px-24">
@@ -140,7 +143,7 @@ function App() {
           {values?.slice(1, 7).map((hour, idx) => (
             <MiniCard
               key={idx}
-              time={hour.datetime}
+              datetime={hour.datetimeStr}
               temp={hour.temp}
               iconString={hour.conditions}
             />
@@ -150,6 +153,10 @@ function App() {
         {values && values.length > 0 && (
           <HourlyForecast forecastData={values.slice(0, 12)} />
         )}
+        {weather.days && weather.days.length > 0 && (
+        <DailyForecast data={weather.days.slice(1, 8)} />
+        )}
+
       </main>
     </div>
   );
